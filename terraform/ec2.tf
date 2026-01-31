@@ -42,25 +42,11 @@ resource "aws_iam_role" "role" {
 EOF
 }
 
-resource "aws_iam_role_policy" "access_ecr_policy" {
-  name = "allow_ec2_access_ecr"
-  role = aws_iam_role.role.id
+resource "aws_iam_role_policy_attachment" "ecr_readonly_attach" {
+  role       = aws_iam_role.role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+}
 
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "ecr:*"
-      ],
-      "Effect": "Allow",
-      "Resource": "*"
-    }
-  ]
-}
-EOF
-}
 
 resource "aws_launch_template" "presentation_tier" {
   name = "presentation_tier"
